@@ -1,0 +1,4 @@
+*.tar.gz
+*.txt
+test_images/
+ArenaSDK_Linux_x64/
