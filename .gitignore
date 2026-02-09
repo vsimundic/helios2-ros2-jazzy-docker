@@ -2,3 +2,6 @@
 *.txt
 test_images/
 ArenaSDK_Linux_x64/
+assets/*.tar.gz
+assets/ArenaSDK_*
+assets/ArenaView*
