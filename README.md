@@ -8,6 +8,32 @@ This repo provides a Docker-based setup for using Lucid Vision Labs Arena SDK wi
 
 See `THIRD_PARTY_NOTICES.md` for details.
 
-## Vendor downloads (not included)
-You must download the ArenaViewMP/Arena SDK tarball from Lucid Vision Labs and place it in:
-`assets/ArenaViewMP_v_1.0.0.10_Linux_x64.tar.gz`
+## Requirements
+- Docker
+- For ArenaViewMP GUI on NVIDIA: NVIDIA driver + NVIDIA Container Toolkit
+- X11 running on the host
+
+## Assets
+Download the official SDK at this [link](https://thinklucid.com/downloads-hub) and place the `.tar.gz` in `assets/`:
+
+- `assets/ArenaViewMP*_Linux_x64*.tar.gz`
+
+The tarball is expected to contain:
+- `ArenaSDK_Linux_x64/`
+- `Lucid_Broadcom_Driver_Package_v*.tar.gz`
+
+## Build the image
+```bash
+./docker/docker_build.sh
+```
+
+## Run the container
+```bash
+./docker/docker_run.sh
+```
+
+## Run ArenaViewMP (GUI)
+Inside the container:
+```bash
+avmp
+```
