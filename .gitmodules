@@ -1,3 +1,0 @@
-[submodule "arena_camera_ros2"]
-	path = arena_camera_ros2
-	url = https://github.com/lucidvisionlabs/arena_camera_ros2.git
