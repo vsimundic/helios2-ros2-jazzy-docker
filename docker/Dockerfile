@@ -1,6 +1,9 @@
 FROM osrf/ros:jazzy-desktop-full-noble
 SHELL ["/bin/bash", "-lc"]
 
+# Add ROS2 sources to bashrc
+RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+
 COPY assets/ArenaViewMP*_Linux_x64*.tar.gz /tmp/
 RUN set -eux; \
     shopt -s nullglob; \
@@ -93,5 +96,10 @@ echo "NOTE: This modifies the HOST kernel (modules/drivers)."
 cd "$PKG_DIR"
 exec bash "$SCRIPT"
 EOF
+
+# ROS2 installs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-jazzy-rclcpp-components \
+  && rm -rf /var/lib/apt/lists/*
 
 CMD ["bash"]
