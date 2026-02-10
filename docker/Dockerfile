@@ -16,7 +16,6 @@ RUN set -eux; \
     fi; \
     mv "${AVMP_FILES[0]}" /tmp/avmp.tar.gz
 
-# Basic tools (and things commonly needed by DKMS/driver installers)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     tar \
