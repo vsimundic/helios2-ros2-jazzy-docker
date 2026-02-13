@@ -8,4 +8,5 @@ assets/ArenaView*
 build/
 install/
 log/
+data/
 # .vscode/
