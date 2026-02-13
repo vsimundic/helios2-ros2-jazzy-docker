@@ -1,0 +1,24 @@
+tree_capture:
+  ros__parameters:
+    base_dir: /home/user/helios2-ros2/helios2_ws/data/BRANCH_vZ
+    camera_type: helios2
+    label: B # B-> before, A-> after
+    row: "1"
+    variety: V # V-> viljamovka
+    tree_id: "0000"
+    view_id: "0"
+    capture_dir: captures
+    mode: Depth
+
+    preview_width: 640
+    preview_height: 480
+
+    depth_topic: /camera/depth/image_raw
+    intensity_topic: /camera/intensity/image_raw
+    points_topic: /camera/points
+    camera_info_topic: /camera/depth/camera_info
+
+    sync_queue_size: 10
+    sync_slop_sec: 0.05
+
+    rotate_ply_x180: true

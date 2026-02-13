@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach (gdbserver :3000) HALHeliosExecutable",
+      "type": "cppdbg",
+      "request": "launch",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerServerAddress": "localhost:3000",
+      "program": "${workspaceFolder}/install/helios2_hal/lib/helios2_hal/HALHeliosExecutable",
+      "cwd": "${workspaceFolder}",
+      "setupCommands": [
+        { "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ]
+    }
+  ]
+}
