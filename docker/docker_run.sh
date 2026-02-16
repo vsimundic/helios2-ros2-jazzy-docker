@@ -19,7 +19,7 @@ mkdir -p /tmp/runtime-root
 # Stop/remove old container if it exists (works even with --rm)
 docker rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true
 
-docker run -it --rm \
+docker run -it \
   --name "${CONTAINER_NAME}" \
   --net=host \
   --ipc=host \

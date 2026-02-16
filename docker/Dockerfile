@@ -176,4 +176,4 @@ RUN apt-get update && apt-get install -y gdb gdbserver \
 # # RUN apt-get update && apt-get remove -y python3-opencv \
 # #  && pip3 install --no-cache-dir opencv-python
 
-CMD ["bash"]
+# CMD ["bash"]
