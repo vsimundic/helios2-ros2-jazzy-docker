@@ -5,8 +5,9 @@ Docker-based setup for using the Lucid Vision Labs Arena SDK with **ROS 2 Jazzy*
 - Tree capture UI node for synchronized dataset capture
 
 ## Credits
-- A fork of `ROS2-HAL-LucidLabs-Helios2` from TsuruMasato is included as a git submodule:  
-  https://github.com/TsuruMasato/ROS2-HAL-LucidLabs-Helios2
+- A fork of `ROS2-HAL-LucidLabs-Helios2` from TsuruMasato is included as a git submodule: https://github.com/TsuruMasato/ROS2-HAL-LucidLabs-Helios2
+
+The fork can be seen here: https://github.com/vsimundic/ROS2-HAL-LucidLabs-Helios2
 
 ## Requirements
 - Docker
@@ -15,10 +16,16 @@ Docker-based setup for using the Lucid Vision Labs Arena SDK with **ROS 2 Jazzy*
 
 ---
 
+# Clone (with submodules)
+Clone with submodules enabled:
+```bash
+git clone --recurse-submodules https://github.com/vsimundic/helios2-ros2-jazzy-docker.git
+```
+
 ## Installation
 
 ### 1) Assets
-Download the official Arena SDK tarball and place it into `assets/`:
+Download the official Arena SDK tarball (https://thinklucid.com/downloads-hub/) and place it into `assets/`:
 
 - `assets/ArenaViewMP*_Linux_x64*.tar.gz`
 
@@ -31,12 +38,16 @@ The tarball is expected to contain:
 ./docker/docker_build.sh
 ```
 
-### 3) Run the container
+### 3) Enable displaying windows from the container
+```bash
+xhost local:root
+```
+### 4) Run the container
 ```bash
 ./docker/docker_run.sh
 ```
 
-### 4) ArenaViewMP (GUI) - Currently unavailable
+### 5) ArenaViewMP (GUI) - Currently unavailable
 Inside the container:
 ```bash
 avmp
