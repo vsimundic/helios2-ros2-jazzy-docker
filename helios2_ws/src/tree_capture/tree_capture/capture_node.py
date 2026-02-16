@@ -100,31 +100,39 @@ def camera_info_to_dict(ci: CameraInfo) -> dict:
 
 def pointcloud2_to_xyz(msg: PointCloud2) -> np.ndarray:
     """
-    PointCloud2 -> Nx3 float32 in *meters* (no unit conversion, no filtering).
+    PointCloud2 -> Nx3 float32 in meters, with NaN/Inf rows removed.
     """
     try:
         pts = point_cloud2.read_points_numpy(msg, field_names=("x", "y", "z"))
-        pts = pts.astype(np.float32)
-        return pts
+        pts = np.asarray(pts, dtype=np.float32).reshape((-1, 3))
     except Exception:
-        it = point_cloud2.read_points(msg, field_names=("x", "y", "z"), skip_nans=True)
-        pts = np.array(list(it), dtype=np.float32)
-        return pts.reshape((-1, 3))
+        it = point_cloud2.read_points(msg, field_names=("x", "y", "z"), skip_nans=False)
+        pts = np.array(list(it), dtype=np.float32).reshape((-1, 3))
+
+    # Drop any row containing NaN/Inf
+    if pts.size == 0:
+        return pts
+
+    finite = np.isfinite(pts).all(axis=1)
+    pts = pts[finite]
+    return pts
 
 
 def write_ply_xyz(points: np.ndarray, path: Path, rotate_x_180: bool = True) -> None:
-    """
-    Save Nx3 float32 in meters as ASCII PLY.
-    Optional rotation (flip Y and Z).
-    """
     if points.size == 0:
         print("Point cloud is empty; not writing PLY.")
         return
 
+    pts = np.asarray(points, dtype=np.float32).reshape((-1, 3))
+    pts = pts[np.isfinite(pts).all(axis=1)]
+    if pts.size == 0:
+        print("Point cloud has only NaN/Inf; not writing PLY.")
+        return
+
     ensure_dir(path.parent)
-    pts = points.copy()
 
     if rotate_x_180:
+        pts = pts.copy()
         pts[:, 1] = -pts[:, 1]
         pts[:, 2] = -pts[:, 2]
 
@@ -286,24 +294,33 @@ class TreeCaptureUINode(Node):
                 self.get_logger().warn("No synchronized bundle received yet; cannot save.")
                 return
 
+            # Snapshot view id for this capture BEFORE launching the thread
+            count = make_count_str(self.view_id)
+
             # Copy messages so saving isn't racing with new arrivals
             depth_msg = copy.deepcopy(bundle[0])
             intensity_msg = copy.deepcopy(bundle[1])
             cloud_msg = copy.deepcopy(bundle[2])
             caminfo_msg = copy.deepcopy(bundle[3])
 
-            # Save in a background thread (keeps UI responsive)
             threading.Thread(
                 target=self._save_bundle,
-                args=(depth_msg, intensity_msg, cloud_msg, caminfo_msg),
+                args=(depth_msg, intensity_msg, cloud_msg, caminfo_msg, count),
                 daemon=True,
             ).start()
 
-            # increment view
+            # Now increment for the next capture
             self.view_id = str(int(self.view_id) + 1)
             self._update_title()
 
-    def _save_bundle(self, depth_msg: Image, intensity_msg: Image, cloud_msg: PointCloud2, caminfo_msg: CameraInfo):
+    def _save_bundle(
+        self,
+        depth_msg: Image,
+        intensity_msg: Image,
+        cloud_msg: PointCloud2,
+        caminfo_msg: CameraInfo,
+        count: str,
+    ):
         tree_dir = build_tree_dir(
             self.base_dir,
             self.camera_type,
@@ -319,13 +336,11 @@ class TreeCaptureUINode(Node):
         ensure_dir(depth_dir)
         ensure_dir(pc_dir)
 
-        count = make_count_str(self.view_id)
-
         depth_png = depth_dir / f"{count}_depth.png"
-        heat_png = depth_dir / f"{count}_heatmap.png"
+        heat_png  = depth_dir / f"{count}_heatmap.png"
         inten_png = depth_dir / f"{count}_intensity.png"
-        cam_yaml = depth_dir / f"{count}_camera_params.yaml"
-        ply_path = pc_dir / f"{count}.ply"
+        cam_yaml  = depth_dir / f"{count}_camera_params.yaml"
+        ply_path  = pc_dir / f"{count}.ply"
 
         # Depth: save as 16-bit PNG in millimeters (from float meters)
         depth = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding="passthrough")

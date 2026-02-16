@@ -21,4 +21,4 @@ tree_capture:
     sync_queue_size: 10
     sync_slop_sec: 0.05
 
-    rotate_ply_x180: true
+    rotate_ply_x180: false
