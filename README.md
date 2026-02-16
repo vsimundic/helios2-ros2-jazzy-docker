@@ -55,7 +55,7 @@ avmp
 
 ---
 
-## ROS 2 node: Helios2 HAL (point cloud + intensity image + camera info)
+## ROS 2 node: Helios2 HAL (point cloud + intensity image + depth image + camera info)
 
 This repository includes a ROS 2 component node that connects to a Helios2-family camera via Arena SDK and publishes:
 
@@ -143,7 +143,7 @@ ros2 launch tree_capture capture.launch.py
 ```
 
 ### Node parameters
-The node declares the following ROS 2 parameters.
+The node declares the following ROS 2 parameters, which can be set in `helios2_ws/src/tree_capture/params/capture_params.yaml`. Remember to run `colcon build` after you change the `.yaml`.
 
 #### Output / dataset labeling
 - `base_dir` (string, default: `BRANCH_vZ`)  
@@ -246,6 +246,15 @@ Optional sanity checks:
 ```bash
 ros2 topic list | grep camera
 ros2 topic echo --once /camera/camera_info
+```
+
+### 5) Change the parameters in YAML file if necessary
+Open `helios2_ws/src/tree_capture/params/capture_params.yaml` and change parameters as necessary. Run this to store the changes for ROS2:
+```bash
+docker exec -it helios2-ros2-dev bash
+cd /home/user/helios2-ros2/helios2_ws
+colcon build
+source install/setup.bash
 ```
 
 ### 5) Launch the tree capture UI (inside container, Terminal 3)
