@@ -184,7 +184,7 @@ class TreeCaptureUINode(Node):
         self.variety = str(self.get_parameter("variety").value)
         self.tree_id = str(self.get_parameter("tree_id").value).zfill(4)
         self.view_id = str(self.get_parameter("view_id").value)
-        self.capture_dir = str(self.get_parameter("capture_dir").value)
+        self.capture_dir_base = str(self.get_parameter("capture_dir").value)
 
         self.preview_w = int(self.get_parameter("preview_width").value)
         self.preview_h = int(self.get_parameter("preview_height").value)
@@ -199,6 +199,9 @@ class TreeCaptureUINode(Node):
         self.rotate_ply = bool(self.get_parameter("rotate_ply_x180").value)
 
         self.use_heatmap = False
+
+        self.capture_dir = ""
+        self.capture_marker = False
 
         # Latest synchronized bundle
         self._lock = threading.Lock()
@@ -245,7 +248,7 @@ class TreeCaptureUINode(Node):
             f"Capture ({self.label}, row={self.row}, variety={self.variety}) | "
             f"tree={self.tree_id} view={self.view_id} | "
             f"{'HEATMAP' if self.use_heatmap else 'GRAYSCALE'} | "
-            "SPACE=save, N=next tree, H=heatmap, ESC=exit"
+            "SPACE=save, N=next tree, H=heatmap, M=change capture dir, ESC=exit"
         )
         try:
             cv2.setWindowTitle(self.window_name, title)
@@ -283,6 +286,12 @@ class TreeCaptureUINode(Node):
         if key in (ord("n"), ord("N")):
             self.tree_id = str(int(self.tree_id) + 1).zfill(4)
             self.view_id = "0"
+            self._update_title()
+            return
+        
+        if key in (ord("m"), ord("M")):
+            self.capture_marker = not self.capture_marker
+            self.capture_dir = f"{'marker_' if self.capture_marker else ''}{self.capture_dir_base}"
             self._update_title()
             return
 
