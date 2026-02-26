@@ -25,7 +25,7 @@ git clone --recurse-submodules https://github.com/vsimundic/helios2-ros2-jazzy-d
 ## Installation
 
 ### 1) Assets
-Download the official Arena SDK tarball (https://thinklucid.com/downloads-hub/) and place it into `assets/`:
+Download the official Arena SDK tarball (https://thinklucid.com/downloads-hub/) and place it into `assets/` in the project root directory:
 
 - `assets/ArenaViewMP*_Linux_x64*.tar.gz`
 
