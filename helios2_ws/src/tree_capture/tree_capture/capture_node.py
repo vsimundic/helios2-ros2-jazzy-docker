@@ -200,8 +200,8 @@ class TreeCaptureUINode(Node):
 
         self.use_heatmap = False
 
-        self.capture_dir = ""
         self.capture_marker = False
+        self.capture_dir = f"{'marker_' if self.capture_marker else ''}{self.capture_dir_base}"
 
         # Latest synchronized bundle
         self._lock = threading.Lock()
@@ -245,7 +245,7 @@ class TreeCaptureUINode(Node):
 
     def _update_title(self):
         title = (
-            f"Capture ({self.label}, row={self.row}, variety={self.variety}) | "
+            f"Capture ({self.label}, row={self.row}, variety={self.variety}) | capture_dir={self.capture_dir} |"
             f"tree={self.tree_id} view={self.view_id} | "
             f"{'HEATMAP' if self.use_heatmap else 'GRAYSCALE'} | "
             "SPACE=save, N=next tree, H=heatmap, M=change capture dir, ESC=exit"
